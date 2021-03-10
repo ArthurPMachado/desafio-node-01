@@ -19,7 +19,7 @@ function checksExistsUserAccount(request, response, next) {
     return response.status(404).json({ error: 'User not found' });
   }
 
-  request.username = username;
+  request.user = user;
 
   return next();
 }
@@ -44,16 +44,29 @@ app.post('/users', (request, response) => {
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  const { username } = request;
+  const { user } = request;
 
-  const findTodosFromUser = users.filter((user) => user.username === username)
+  const findTodosFromUser = users.filter((item) => item.username === user.username)
     .map(user => user.todos);
 
   return response.json(findTodosFromUser);
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { title, deadline } = request.body;
+  const { user } = request;
+
+  const addTodo = {
+    id: uuidv4(),
+    title,
+    done: false,
+    deadline: new Date(deadline),
+    created_at: new Date()
+  };
+
+  user.todos.push(addTodo);
+
+  return response.status(201).send();
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {

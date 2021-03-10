@@ -28,7 +28,12 @@ app.post('/users', (request, response) => {
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { username } = request;
+
+  const findTodosFromUser = users.filter((user) => user.username === username)
+    .map(user => user.todos);
+
+  return response.json(findTodosFromUser);
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {

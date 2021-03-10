@@ -44,9 +44,9 @@ app.post('/users', (request, response) => {
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  const { user } = request;
+  const { username } = request.user;
 
-  const findTodosFromUser = users.filter((item) => item.username === user.username)
+  const findTodosFromUser = users.filter((user) => user.username === user.username)
     .map(user => user.todos);
 
   return response.json(findTodosFromUser);
@@ -70,7 +70,17 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { title, deadline } = request.body;
+  const { id } = request.params;
+  const { username } = request.user;
+
+  const findUser = users.find((user) => user.username === username);
+  const findTodo = findUser.todos.find((todo) => todo.id === id);
+
+  findTodo.title = title;
+  findTodo.deadline = new Date(deadline);
+
+  return response.status(201).send();
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {

@@ -90,16 +90,22 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  const { done } = request.body;
   const { id } = request.params;
   const { username } = request.user;
 
   const findUser = users.find((user) => user.username === username);
+
+  const todoExists = findUser.todos.some((todo) => todo.id === id);
+
+  if(!todoExists) {
+    return response.status(404).json({ error: 'Todo not found' });
+  }
+
   const findTodo = findUser.todos.find((todo) => todo.id === id);
 
-  findTodo.done = done;
-
-  return response.status(201).send();
+  findTodo.done = true;
+  
+  return response.status(201).json(findTodo);
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {

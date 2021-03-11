@@ -1,2 +1,2 @@
 # desafio-node-01
-Desafio do bootcamp Ignite da trilha Node
+Desafio sobre conceitos de node do bootcamp Ignite da trilha Node

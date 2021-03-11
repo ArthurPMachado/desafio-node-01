@@ -32,22 +32,21 @@ app.post('/users', (request, response) => {
   if (userAlreadyExists) {
     return response.status(400).json({ error: 'User already exists' })
   }
-
-  users.push({
+  
+  const newUser = {
     id: uuidv4(),
     name,
     username,
     todos: []
-  });
+  }
 
-  return response.status(201).json(users);
+  users.push(newUser);
+
+  return response.status(201).json(newUser);
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
   const { username } = request.user;
-
-  const findTodosFromUser = users.filter((user) => user.username === user.username)
-    .map(user => user.todos);
 
   return response.json(findTodosFromUser);
 });
